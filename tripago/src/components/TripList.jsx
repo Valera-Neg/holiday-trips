@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 
 //style
 import "./TripList.css";
@@ -7,11 +7,15 @@ export default function TripList() {
   const [trips, setTrips] = useState([]);
   const [url, setUrl] = useState("http://localhost:3000/trips");
 
-  useEffect(() => {
-    fetch(url)
-      .then(response => response.json())
-      .then(json => setTrips(json));
+  const fetchTrips = useCallback(async () => {
+    const response = await fetch(url);
+    const json = await response.json();
+    setTrips(json);
   }, [url]);
+
+  useEffect(() => {
+    fetchTrips();
+  }, [fetchTrips]);
 
   console.log(trips);
 
